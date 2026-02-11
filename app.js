@@ -1,7 +1,19 @@
 const CHECKBOX_KEY = "stajRehberiCheckboxes";
 const TRACKER_KEY = "stajRehberiTrackerRows";
+const DECISION_FORM_KEY = "stajRehberiDecisionForm";
 const COMMISSION_AUTH_KEY = "stajRehberiCommissionAuth";
 const COMMISSION_PASSWORD = "Medipol1453";
+const COMMISSION_POLL_MS = 8000;
+const COMMISSION_PUSH_DEBOUNCE_MS = 700;
+
+let commissionSyncUrl = "";
+let commissionSyncActive = false;
+let commissionPendingLocal = false;
+let commissionRemoteFingerprint = "";
+let commissionPollTimer = null;
+let commissionPushTimer = null;
+let commissionIsPulling = false;
+let commissionIsPushing = false;
 
 function formatDate(date) {
   const d = String(date.getDate()).padStart(2, "0");
@@ -18,7 +30,10 @@ function addDays(baseDate, days) {
 
 function loadJson(key, fallback) {
   try {
-    return JSON.parse(localStorage.getItem(key) || "") || fallback;
+    const raw = localStorage.getItem(key);
+    if (!raw) return fallback;
+    const parsed = JSON.parse(raw);
+    return parsed == null ? fallback : parsed;
   } catch {
     return fallback;
   }
@@ -26,6 +41,15 @@ function loadJson(key, fallback) {
 
 function saveJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
+}
+
+function isCommissionPage() {
+  return Boolean(document.getElementById("commissionContent"));
+}
+
+function emitCommissionLocalChange() {
+  if (!isCommissionPage()) return;
+  window.dispatchEvent(new Event("commission:local-change"));
 }
 
 function setupTabs() {
@@ -57,20 +81,35 @@ function updateRoleProgress(role) {
   if (target) target.textContent = `${percent}%`;
 }
 
-function setupChecklistPersistence() {
+function applyChecklistStateFromStorage() {
   const saved = loadJson(CHECKBOX_KEY, {});
+  const checkboxes = Array.from(document.querySelectorAll(".checklist input[type='checkbox'][data-key]"));
+  checkboxes.forEach((input) => {
+    const key = input.dataset.key;
+    input.checked = Boolean(key && saved[key]);
+  });
+}
+
+function setupChecklistPersistence() {
+  applyChecklistStateFromStorage();
   const checkboxes = Array.from(document.querySelectorAll(".checklist input[type='checkbox'][data-key]"));
 
   checkboxes.forEach((input) => {
-    const key = input.dataset.key;
-    if (saved[key]) input.checked = true;
-
     input.addEventListener("change", () => {
+      const key = input.dataset.key;
+      if (!key) return;
+
       const state = loadJson(CHECKBOX_KEY, {});
       state[key] = input.checked;
       saveJson(CHECKBOX_KEY, state);
+
       const roleContainer = input.closest(".checklist");
       if (roleContainer?.dataset.role) updateRoleProgress(roleContainer.dataset.role);
+
+      const isStudentItem = roleContainer?.dataset.role === "student";
+      if (isCommissionPage() && !isStudentItem) {
+        emitCommissionLocalChange();
+      }
     });
   });
 
@@ -114,6 +153,7 @@ function setupCommissionAuth() {
     authGate.hidden = true;
     content.hidden = false;
     content.classList.add("unlocked");
+    document.dispatchEvent(new Event("commission:unlocked"));
   };
 
   const lock = () => {
@@ -123,6 +163,7 @@ function setupCommissionAuth() {
     input.value = "";
     message.textContent = "";
     content.classList.remove("unlocked");
+    document.dispatchEvent(new Event("commission:locked"));
   };
 
   if (sessionStorage.getItem(COMMISSION_AUTH_KEY) === "ok") {
@@ -204,18 +245,71 @@ function copyNoticeTemplate() {
     });
 }
 
+function restoreDecisionForm() {
+  const saved = loadJson(DECISION_FORM_KEY, {});
+  const fields = ["studentName", "studentNo", "companyName", "startDate", "endDate"];
+  fields.forEach((id) => {
+    const input = document.getElementById(id);
+    if (!(input instanceof HTMLInputElement)) return;
+    const value = saved[id];
+    if (typeof value === "string") {
+      input.value = value;
+    }
+  });
+}
+
+function persistDecisionForm() {
+  const fields = ["studentName", "studentNo", "companyName", "startDate", "endDate"];
+  const next = {};
+  fields.forEach((id) => {
+    const input = document.getElementById(id);
+    if (input instanceof HTMLInputElement) {
+      next[id] = input.value;
+    }
+  });
+  saveJson(DECISION_FORM_KEY, next);
+}
+
 function setupDecisionArea() {
   const decisionInputs = Array.from(document.querySelectorAll("#decisionChecklist input[type='checkbox']"));
-  decisionInputs.forEach((input) => input.addEventListener("change", evaluateDecision));
+  const decisionFields = Array.from(
+    document.querySelectorAll("#studentName, #studentNo, #companyName, #startDate, #endDate")
+  );
+
+  restoreDecisionForm();
+
+  decisionInputs.forEach((input) => {
+    input.addEventListener("change", () => {
+      evaluateDecision();
+      if (!input.dataset.key && isCommissionPage()) {
+        emitCommissionLocalChange();
+      }
+    });
+  });
+
+  decisionFields.forEach((input) => {
+    input.addEventListener("input", () => {
+      persistDecisionForm();
+      if (isCommissionPage()) emitCommissionLocalChange();
+    });
+    input.addEventListener("change", () => {
+      persistDecisionForm();
+      if (isCommissionPage()) emitCommissionLocalChange();
+    });
+  });
 
   const resetButton = document.getElementById("resetChecks");
   const copyButton = document.getElementById("copyNotice");
 
   resetButton?.addEventListener("click", () => {
+    const checkboxState = loadJson(CHECKBOX_KEY, {});
     decisionInputs.forEach((item) => {
       item.checked = false;
+      if (item.dataset.key) checkboxState[item.dataset.key] = false;
     });
+    saveJson(CHECKBOX_KEY, checkboxState);
     evaluateDecision();
+    if (isCommissionPage()) emitCommissionLocalChange();
   });
 
   copyButton?.addEventListener("click", copyNoticeTemplate);
@@ -230,17 +324,7 @@ function renderTrackerRows(rows) {
 
   rows.forEach((row, index) => {
     const tr = document.createElement("tr");
-    const fields = [
-      "name",
-      "no",
-      "company",
-      "start",
-      "end",
-      "document",
-      "committee",
-      "admin",
-      "note"
-    ];
+    const fields = ["name", "no", "company", "start", "end", "document", "committee", "admin", "note"];
 
     fields.forEach((field) => {
       const td = document.createElement("td");
@@ -260,6 +344,7 @@ function renderTrackerRows(rows) {
 
         state[rowIndex][key] = target.value;
         saveJson(TRACKER_KEY, state);
+        if (isCommissionPage()) emitCommissionLocalChange();
       });
 
       td.appendChild(input);
@@ -276,6 +361,7 @@ function renderTrackerRows(rows) {
       state.splice(index, 1);
       saveJson(TRACKER_KEY, state);
       renderTrackerRows(state);
+      if (isCommissionPage()) emitCommissionLocalChange();
     });
     action.appendChild(del);
     tr.appendChild(action);
@@ -347,6 +433,7 @@ function setupTrackerTable() {
     });
     saveJson(TRACKER_KEY, state);
     renderTrackerRows(state);
+    if (isCommissionPage()) emitCommissionLocalChange();
   });
 
   clearRows?.addEventListener("click", () => {
@@ -354,12 +441,179 @@ function setupTrackerTable() {
     if (!ok) return;
     saveJson(TRACKER_KEY, []);
     renderTrackerRows([]);
+    if (isCommissionPage()) emitCommissionLocalChange();
   });
 
   exportCsv?.addEventListener("click", () => {
     const state = loadJson(TRACKER_KEY, []);
     exportTrackerCsv(state);
   });
+}
+
+function normalizeCommissionSnapshot(value) {
+  if (!value || typeof value !== "object") return null;
+
+  const checkboxes =
+    value.checkboxes && typeof value.checkboxes === "object" && !Array.isArray(value.checkboxes)
+      ? value.checkboxes
+      : {};
+
+  const trackerRows = Array.isArray(value.trackerRows) ? value.trackerRows : [];
+
+  const decisionForm =
+    value.decisionForm && typeof value.decisionForm === "object" && !Array.isArray(value.decisionForm)
+      ? value.decisionForm
+      : {};
+
+  return {
+    checkboxes,
+    trackerRows,
+    decisionForm,
+    updatedAt: typeof value.updatedAt === "string" ? value.updatedAt : ""
+  };
+}
+
+function getCommissionSnapshot() {
+  return {
+    checkboxes: loadJson(CHECKBOX_KEY, {}),
+    trackerRows: loadJson(TRACKER_KEY, []),
+    decisionForm: loadJson(DECISION_FORM_KEY, {}),
+    updatedAt: new Date().toISOString()
+  };
+}
+
+function fingerprintCommissionSnapshot(snapshot) {
+  return JSON.stringify({
+    checkboxes: snapshot.checkboxes || {},
+    trackerRows: Array.isArray(snapshot.trackerRows) ? snapshot.trackerRows : [],
+    decisionForm: snapshot.decisionForm || {}
+  });
+}
+
+function applyCommissionSnapshot(snapshot) {
+  saveJson(CHECKBOX_KEY, snapshot.checkboxes);
+  saveJson(TRACKER_KEY, snapshot.trackerRows);
+  saveJson(DECISION_FORM_KEY, snapshot.decisionForm);
+
+  applyChecklistStateFromStorage();
+  restoreDecisionForm();
+  renderTrackerRows(snapshot.trackerRows);
+  ["secretary", "assistant", "faculty"].forEach(updateRoleProgress);
+  evaluateDecision();
+}
+
+async function fetchCommissionRemoteSnapshot() {
+  if (!commissionSyncUrl) return null;
+  const response = await fetch(commissionSyncUrl, { cache: "no-store" });
+  if (!response.ok) throw new Error(`HTTP ${response.status}`);
+  const data = await response.json();
+  return normalizeCommissionSnapshot(data);
+}
+
+async function pushCommissionRemoteSnapshot() {
+  if (!commissionSyncUrl || !commissionSyncActive || commissionIsPushing) return;
+  commissionIsPushing = true;
+  try {
+    const snapshot = getCommissionSnapshot();
+    const response = await fetch(commissionSyncUrl, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(snapshot)
+    });
+
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    commissionRemoteFingerprint = fingerprintCommissionSnapshot(snapshot);
+    commissionPendingLocal = false;
+  } catch (error) {
+    console.error("Komisyon verisi buluta yazılamadı:", error);
+  } finally {
+    commissionIsPushing = false;
+  }
+}
+
+async function pullCommissionRemoteSnapshot() {
+  if (!commissionSyncUrl || !commissionSyncActive || commissionIsPulling || commissionPendingLocal) return;
+  commissionIsPulling = true;
+  try {
+    const remoteSnapshot = await fetchCommissionRemoteSnapshot();
+    if (!remoteSnapshot) return;
+
+    const nextFingerprint = fingerprintCommissionSnapshot(remoteSnapshot);
+    if (nextFingerprint !== commissionRemoteFingerprint) {
+      applyCommissionSnapshot(remoteSnapshot);
+      commissionRemoteFingerprint = nextFingerprint;
+    }
+  } catch (error) {
+    console.error("Komisyon verisi buluttan okunamadı:", error);
+  } finally {
+    commissionIsPulling = false;
+  }
+}
+
+function scheduleCommissionPush() {
+  if (!commissionSyncUrl || !commissionSyncActive) return;
+  commissionPendingLocal = true;
+  if (commissionPushTimer) window.clearTimeout(commissionPushTimer);
+  commissionPushTimer = window.setTimeout(() => {
+    void pushCommissionRemoteSnapshot();
+  }, COMMISSION_PUSH_DEBOUNCE_MS);
+}
+
+async function startCommissionSync() {
+  if (!commissionSyncUrl || commissionSyncActive) return;
+  commissionSyncActive = true;
+  commissionPendingLocal = false;
+
+  try {
+    const remoteSnapshot = await fetchCommissionRemoteSnapshot();
+    if (remoteSnapshot) {
+      applyCommissionSnapshot(remoteSnapshot);
+      commissionRemoteFingerprint = fingerprintCommissionSnapshot(remoteSnapshot);
+    } else {
+      await pushCommissionRemoteSnapshot();
+    }
+  } catch (error) {
+    console.error("Komisyon senkronizasyonu başlatılamadı:", error);
+  }
+
+  commissionPollTimer = window.setInterval(() => {
+    void pullCommissionRemoteSnapshot();
+  }, COMMISSION_POLL_MS);
+}
+
+function stopCommissionSync() {
+  commissionSyncActive = false;
+  commissionPendingLocal = false;
+  if (commissionPollTimer) {
+    window.clearInterval(commissionPollTimer);
+    commissionPollTimer = null;
+  }
+  if (commissionPushTimer) {
+    window.clearTimeout(commissionPushTimer);
+    commissionPushTimer = null;
+  }
+}
+
+function setupCommissionSharedSync() {
+  if (!isCommissionPage()) return;
+
+  commissionSyncUrl = typeof window.STAJ_COMMISSION_REMOTE_URL === "string" ? window.STAJ_COMMISSION_REMOTE_URL.trim() : "";
+  if (!commissionSyncUrl) {
+    console.warn(
+      "STAJ_COMMISSION_REMOTE_URL tanımlı değil. Komisyon verileri yalnızca bu cihaza kaydedilir."
+    );
+    return;
+  }
+
+  window.addEventListener("commission:local-change", scheduleCommissionPush);
+  document.addEventListener("commission:unlocked", () => {
+    void startCommissionSync();
+  });
+  document.addEventListener("commission:locked", stopCommissionSync);
+
+  if (sessionStorage.getItem(COMMISSION_AUTH_KEY) === "ok") {
+    void startCommissionSync();
+  }
 }
 
 function init() {
@@ -369,6 +623,7 @@ function init() {
   setupPlanner();
   setupDecisionArea();
   setupTrackerTable();
+  setupCommissionSharedSync();
 }
 
 document.addEventListener("DOMContentLoaded", init);

@@ -1,0 +1,1 @@
+window.STAJ_COMMISSION_REMOTE_URL = "";

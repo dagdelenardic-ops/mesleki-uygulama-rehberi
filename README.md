@@ -13,6 +13,16 @@ Amaç:
 - `komisyon/index.html`: Komisyon kabul/değerlendirme ekranı (şifre korumalı)
   - Şifre: `Medipol1453`
 
+## Paylaşım Linkleri
+
+- Öğrenci linki: `/ogrenci/` (alternatif: `/ogrenci.html`)
+- Komisyon linki: `/komisyon/` (alternatif: `/komisyon.html`)
+- Ana giriş (`/`) otomatik olarak öğrenci sayfasına yönlendirir.
+
+GitHub Pages yayınında örnek:
+- Öğrenci: `https://<kullanici-adi>.github.io/<repo-adi>/ogrenci/`
+- Komisyon: `https://<kullanici-adi>.github.io/<repo-adi>/komisyon/`
+
 ## İçerik
 
 - Rol bazlı kontrol listeleri (öğrenci, bölüm sekreteri, asistan, öğretim üyesi)
@@ -20,14 +30,16 @@ Amaç:
 - Belge kontrol matrisi (EK-1...EK-9)
 - Kurum uygunluk ön karar modülü
 - Başvuru takip tablosu (tarayıcı içinde saklama + CSV dışa aktarma)
+- Komisyon ekranında ortak veri senkronizasyonu (uzak JSON endpoint ile)
 
 ## Dosyalar
 
-- `index.html`: Giriş/bağlantı sayfası
+- `index.html`: Ana giriş (otomatik öğrenci yönlendirmesi)
 - `ogrenci/index.html`: Öğrenci arayüzü
 - `komisyon/index.html`: Komisyon arayüzü
 - `styles.css`: Stil dosyası
 - `app.js`: Etkileşim ve kayıt mantığı
+- `commission-sync-config.js`: Komisyon ortak veri URL ayarı
 - `docs/`: Paylaşılan PDF belgeler
 
 ## Yerel Çalıştırma
@@ -38,7 +50,26 @@ python3 -m http.server 8080
 ```
 
 Sonra tarayıcıdan:
-- [http://localhost:8080](http://localhost:8080)
+- [http://localhost:8080](http://localhost:8080) -> öğrenci sayfasına yönlenir
+- [http://localhost:8080/ogrenci/](http://localhost:8080/ogrenci/)
+- [http://localhost:8080/komisyon/](http://localhost:8080/komisyon/)
+
+## Komisyon İçin Ortak Veri (Paylaşılan Kayıt)
+
+Komisyon ekranındaki checkbox, karar formu ve takip tablosu verilerinin herkes için ortak kalması için
+`commission-sync-config.js` içindeki URL'i doldurun:
+
+```js
+window.STAJ_COMMISSION_REMOTE_URL = "https://<firebase-db>.firebasedatabase.app/mesleki-uygulama.json";
+```
+
+Önerilen kurulum (Firebase Realtime Database):
+1. Firebase'de bir proje açın ve Realtime Database oluşturun.
+2. Database Rules içinde ilgili node için okuma/yazmayı açın (veya kendi güvenlik modelinizi uygulayın).
+3. `commission-sync-config.js` dosyasına yukarıdaki URL'i yazın.
+4. GitHub'a push edin.
+
+Not: Komisyon ekranı yine sayfa şifresi (`Medipol1453`) ile açılır. URL boş bırakılırsa veriler yalnızca cihazdaki tarayıcıda kalır.
 
 ## GitHub Pages ile Yayınlama
 

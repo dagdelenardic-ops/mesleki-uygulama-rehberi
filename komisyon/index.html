@@ -159,21 +159,21 @@
         </div>
 
         <ul class="checklist decision-list" id="decisionChecklist">
-          <li><label><input type="checkbox" data-decision="must" /> İSG belgesi mevcut</label></li>
-          <li><label><input type="checkbox" data-decision="must" /> EK belgeler ve kimlik/fotoğraf seti tam</label></li>
-          <li><label><input type="checkbox" data-decision="must" /> Kurum mevzuata uygun (İstanbul veya USP istisnası)</label></li>
-          <li><label><input type="checkbox" data-decision="must" /> Öğrenci kendi/yakınına ait ya da çalıştığı kurumda değil</label></li>
-          <li><label><input type="checkbox" data-decision="must" /> 20 iş günü tek kurumda planlandı</label></li>
-          <li><label><input type="checkbox" data-decision="must" /> Başlangıç tarihinden en az 20 gün önce başvuru yapılmış</label></li>
+          <li><label><input type="checkbox" data-decision="must" data-key="decision-must-isg" /> İSG belgesi mevcut</label></li>
+          <li><label><input type="checkbox" data-decision="must" data-key="decision-must-ekler" /> EK belgeler ve kimlik/fotoğraf seti tam</label></li>
+          <li><label><input type="checkbox" data-decision="must" data-key="decision-must-kurum" /> Kurum mevzuata uygun (İstanbul veya USP istisnası)</label></li>
+          <li><label><input type="checkbox" data-decision="must" data-key="decision-must-yakinlik" /> Öğrenci kendi/yakınına ait ya da çalıştığı kurumda değil</label></li>
+          <li><label><input type="checkbox" data-decision="must" data-key="decision-must-20gun" /> 20 iş günü tek kurumda planlandı</label></li>
+          <li><label><input type="checkbox" data-decision="must" data-key="decision-must-basvuru" /> Başlangıç tarihinden en az 20 gün önce başvuru yapılmış</label></li>
           <li>
             <label>
-              <input type="checkbox" id="isOnline" />
+              <input type="checkbox" id="isOnline" data-key="decision-is-online" />
               Online staj planı var
             </label>
           </li>
           <li>
             <label>
-              <input type="checkbox" id="onlineApproved" />
+              <input type="checkbox" id="onlineApproved" data-key="decision-online-approved" />
               Online staj için bölüm komisyon onayı alındı
             </label>
           </li>
@@ -231,6 +231,7 @@
     </p>
   </footer>
 
+  <script src="../commission-sync-config.js"></script>
   <script src="../app.js"></script>
 </body>
 </html>
