@@ -1,0 +1,292 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gazetecilik Mesleki Uygulama Rehberi</title>
+  <meta
+    name="description"
+    content="İletişim Fakültesi Gazetecilik bölümü mesleki uygulama sürecini öğrenci, sekreterya, asistan ve öğretim üyeleri için takip eden gayriresmi web rehberi."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="hero container">
+    <p class="kicker">Gayriresmi Koordinasyon Ekranı</p>
+    <h1>Gazetecilik Mesleki Uygulama Süreç Rehberi</h1>
+    <p class="lead">
+      Bu sistem, öğrencilerin ve fakülte ekibinin belge ve onay sürecini hızlandırmak için hazırlanmıştır.
+      Resmi evrak teslimi yine elden yapılır.
+    </p>
+
+    <div class="rule-chips">
+      <span>20 iş günü zorunlu</span>
+      <span>Tek kurumda tamamlanır</span>
+      <span>İSG eğitimi zorunlu</span>
+      <span>Başlangıçtan en az 20 gün önce başvuru</span>
+    </div>
+  </header>
+
+  <main class="container stack-xl">
+    <section class="card notice">
+      <h2>Kritik Not</h2>
+      <p>
+        Bu sayfa resmi başvuru yerine geçmez. Öğrenciler belgeleri bölüm sekreterliğine fiziksel olarak teslim
+        eder. Komisyon onayı olmadan mesleki uygulama başlatılamaz.
+      </p>
+    </section>
+
+    <section class="card stack-md">
+      <div class="section-title-row">
+        <h2>1) Belge Havuzu</h2>
+        <p class="muted">Paylaşım için GitHub reposuna bu dosyalarla birlikte yüklenebilir.</p>
+      </div>
+      <div class="doc-grid">
+        <a class="doc-card" href="docs/if-mesleki-uygulama-yonergesi.pdf" target="_blank" rel="noopener noreferrer">
+          <strong>Mesleki Uygulama Yönergesi</strong>
+          <span>Resmi madde ve şartlar</span>
+        </a>
+        <a class="doc-card" href="docs/mesleki-uygulama-formu_1.pdf" target="_blank" rel="noopener noreferrer">
+          <strong>Mesleki Uygulama Form Seti (EK 1-9)</strong>
+          <span>Öğrenci ve kurum formları</span>
+        </a>
+        <a class="doc-card" href="docs/mesleki-uygulama-is-akisi.pdf" target="_blank" rel="noopener noreferrer">
+          <strong>Mesleki Uygulama İş Akışı</strong>
+          <span>Adım adım öğrenci süreci</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="card stack-md">
+      <h2>2) Tarih Planlayıcı</h2>
+      <div class="planner-grid">
+        <label for="submissionDate">Evrakların fakülteye teslim tarihi</label>
+        <input id="submissionDate" type="date" />
+      </div>
+      <div class="result-grid">
+        <article>
+          <h3>İş akışı belgesine göre</h3>
+          <p>Evrak tesliminden 15 gün sonra başlanabilir:</p>
+          <strong id="datePlus15">-</strong>
+        </article>
+        <article>
+          <h3>Yönergeye göre</h3>
+          <p>Başlangıç tarihinden en az 20 gün önce form teslimi zorunludur.</p>
+          <strong id="datePlus20">-</strong>
+        </article>
+      </div>
+    </section>
+
+    <section class="card stack-md">
+      <h2>3) Rol Bazlı İş Bölümü</h2>
+      <div class="tabs" role="tablist" aria-label="Rol sekmeleri">
+        <button class="tab active" data-target="role-student" type="button">Öğrenci</button>
+        <button class="tab" data-target="role-secretary" type="button">Bölüm Sekreteri</button>
+        <button class="tab" data-target="role-assistant" type="button">Asistanlar</button>
+        <button class="tab" data-target="role-faculty" type="button">Öğretim Üyeleri</button>
+      </div>
+
+      <section id="role-student" class="tab-panel active">
+        <p class="panel-meta">Tamamlanma: <strong data-progress-for="student">0%</strong></p>
+        <ul class="checklist" data-role="student">
+          <li><label><input type="checkbox" data-key="student-1" /> Mesleki Uygulama dersini seç</label></li>
+          <li><label><input type="checkbox" data-key="student-2" /> İSG eğitimini tamamla veya geçerli belgeni onaylat</label></li>
+          <li><label><input type="checkbox" data-key="student-3" /> EK-1 formunu işyerine onaylat (3 asıl nüsha)</label></li>
+          <li><label><input type="checkbox" data-key="student-4" /> 3 kimlik fotokopisi + 3 vesikalık fotoğrafı hazırla</label></li>
+          <li><label><input type="checkbox" data-key="student-5" /> Başlangıçtan en az 20 gün önce bölüm sekreterliğine teslim et</label></li>
+          <li><label><input type="checkbox" data-key="student-6" /> Onay sonrası 20 iş günü tek kurumda stajı tamamla</label></li>
+          <li><label><input type="checkbox" data-key="student-7" /> EK-2, EK-3 ve mesleki uygulama dosyasını kapalı zarfta teslim et</label></li>
+          <li><label><input type="checkbox" data-key="student-8" /> Komisyon mülakatına katıl</label></li>
+        </ul>
+      </section>
+
+      <section id="role-secretary" class="tab-panel">
+        <p class="panel-meta">Tamamlanma: <strong data-progress-for="secretary">0%</strong></p>
+        <ul class="checklist" data-role="secretary">
+          <li><label><input type="checkbox" data-key="secretary-1" /> Öğrencinin başvuru evraklarını teslim al</label></li>
+          <li><label><input type="checkbox" data-key="secretary-2" /> Zorunlu ekleri ön kontrolden geçir (EK-1, fotoğraf, kimlik vb.)</label></li>
+          <li><label><input type="checkbox" data-key="secretary-3" /> Eksik evrakları öğrenciye bildir, asistan listesine işle</label></li>
+          <li><label><input type="checkbox" data-key="secretary-4" /> Eksiksiz dosyayı araştırma görevlisine teslim et</label></li>
+          <li><label><input type="checkbox" data-key="secretary-5" /> Teslim edilen dosyalar için günlük kayıt tut</label></li>
+        </ul>
+      </section>
+
+      <section id="role-assistant" class="tab-panel">
+        <p class="panel-meta">Tamamlanma: <strong data-progress-for="assistant">0%</strong></p>
+        <ul class="checklist" data-role="assistant">
+          <li><label><input type="checkbox" data-key="assistant-1" /> Öğrenci başvuru formlarını toplamak</label></li>
+          <li><label><input type="checkbox" data-key="assistant-2" /> EK belgeleri kontrol etmek</label></li>
+          <li><label><input type="checkbox" data-key="assistant-3" /> Eksik evrak varsa Sevde'ye bildirmek</label></li>
+          <li><label><input type="checkbox" data-key="assistant-4" /> Başvuru Excel listesini tutmak</label></li>
+          <li><label><input type="checkbox" data-key="assistant-5" /> Onaya hazır dosyaları öğretim üyesine iletmek</label></li>
+          <li><label><input type="checkbox" data-key="assistant-6" /> Onaylanan öğrencileri idari birime Birgül yazısıyla bildirmek</label></li>
+          <li><label><input type="checkbox" data-key="assistant-7" /> SGK süreci takibini Birgül üzerinden yürütmek</label></li>
+        </ul>
+      </section>
+
+      <section id="role-faculty" class="tab-panel">
+        <p class="panel-meta">Tamamlanma: <strong data-progress-for="faculty">0%</strong></p>
+        <ul class="checklist" data-role="faculty">
+          <li><label><input type="checkbox" data-key="faculty-1" /> Kurum aramalarını yapmak</label></li>
+          <li><label><input type="checkbox" data-key="faculty-2" /> Kurumun yönergeye uygunluğunu onaylamak</label></li>
+          <li><label><input type="checkbox" data-key="faculty-3" /> Online staj imkanına karar vermek</label></li>
+          <li><label><input type="checkbox" data-key="faculty-4" /> Öğrenci mülakatını yapmak</label></li>
+          <li><label><input type="checkbox" data-key="faculty-5" /> Onaylanan öğrencileri idari birime resmi yazıyla iletmek</label></li>
+        </ul>
+      </section>
+    </section>
+
+    <section class="card stack-md">
+      <h2>4) Belge Kontrol Matrisi</h2>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Belge</th>
+              <th>Ne zaman</th>
+              <th>Kim hazırlar</th>
+              <th>Kim kontrol eder</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>EK-1 Mesleki Uygulama Formu (3 asıl nüsha)</td>
+              <td>Başvurudan önce</td>
+              <td>Öğrenci + Kurum Yetkilisi</td>
+              <td>Bölüm Sekreteri / Asistan</td>
+            </tr>
+            <tr>
+              <td>3 kimlik fotokopisi + 3 vesikalık</td>
+              <td>EK-1 ile birlikte</td>
+              <td>Öğrenci</td>
+              <td>Bölüm Sekreteri</td>
+            </tr>
+            <tr>
+              <td>İSG Belgesi / EK-8 teyidi</td>
+              <td>Staj başlangıcından önce</td>
+              <td>Öğrenci + İSG Birimi</td>
+              <td>Komisyon</td>
+            </tr>
+            <tr>
+              <td>EK-9 İşletme ve Öğrenci Bilgileri Tespit Formu</td>
+              <td>Başvuru aşaması</td>
+              <td>İşletme</td>
+              <td>Asistan / Komisyon</td>
+            </tr>
+            <tr>
+              <td>EK-2 İşyeri Değerlendirme + EK-3 Devam Çizelgesi (kapalı zarf)</td>
+              <td>20 iş günü sonrası</td>
+              <td>İşyeri Yetkilisi</td>
+              <td>Bölüm Komisyonu</td>
+            </tr>
+            <tr>
+              <td>Mesleki Uygulama Dosyası (EK-7 serisi)</td>
+              <td>Staj bitiminde</td>
+              <td>Öğrenci</td>
+              <td>Bölüm Komisyonu</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="card stack-md">
+      <h2>5) Kurum Uygunluk Ön Kararı</h2>
+      <p class="muted">
+        Öğretim üyeleri için hızlı kontrol ekranı. Tüm zorunlu kriterler sağlandığında dosya onaya hazır görünür.
+      </p>
+
+      <div class="quick-form">
+        <label>Öğrenci Ad Soyad <input type="text" id="studentName" placeholder="Örn. Ayşe Yılmaz" /></label>
+        <label>Öğrenci No <input type="text" id="studentNo" placeholder="Örn. 202112345" /></label>
+        <label>Kurum Adı <input type="text" id="companyName" placeholder="Örn. X Haber Ajansı" /></label>
+        <label>Başlangıç Tarihi <input type="date" id="startDate" /></label>
+        <label>Bitiş Tarihi <input type="date" id="endDate" /></label>
+      </div>
+
+      <ul class="checklist decision-list" id="decisionChecklist">
+        <li><label><input type="checkbox" data-decision="must" /> İSG belgesi mevcut</label></li>
+        <li><label><input type="checkbox" data-decision="must" /> EK belgeler ve kimlik/fotoğraf seti tam</label></li>
+        <li><label><input type="checkbox" data-decision="must" /> Kurum mevzuata uygun (İstanbul veya USP istisnası)</label></li>
+        <li><label><input type="checkbox" data-decision="must" /> Öğrenci kendi/yakınına ait ya da çalıştığı kurumda değil</label></li>
+        <li><label><input type="checkbox" data-decision="must" /> 20 iş günü tek kurumda planlandı</label></li>
+        <li><label><input type="checkbox" data-decision="must" /> Başlangıç tarihinden en az 20 gün önce başvuru yapılmış</label></li>
+        <li>
+          <label>
+            <input type="checkbox" id="isOnline" />
+            Online staj planı var
+          </label>
+        </li>
+        <li>
+          <label>
+            <input type="checkbox" id="onlineApproved" />
+            Online staj için bölüm komisyon onayı alındı
+          </label>
+        </li>
+      </ul>
+
+      <div class="decision-box" id="decisionBox" aria-live="polite">
+        Ön karar: <strong>Kontrol bekleniyor</strong>
+      </div>
+
+      <div class="button-row">
+        <button id="copyNotice" type="button">Birgül Yazısı Taslağını Kopyala</button>
+        <button id="resetChecks" type="button" class="ghost">Kontrolleri Sıfırla</button>
+      </div>
+      <p class="muted">Taslak metin panoya kopyalanır; gerekiyorsa resmi yazı formatına uyarlanır.</p>
+    </section>
+
+    <section class="card stack-md">
+      <div class="section-title-row">
+        <h2>6) Başvuru Takip Listesi (Excel Yardımcısı)</h2>
+        <p class="muted">Bu tablo tarayıcıda tutulur, CSV olarak indirilebilir.</p>
+      </div>
+
+      <div class="button-row">
+        <button id="addRow" type="button">Yeni Satır</button>
+        <button id="exportCsv" type="button">CSV İndir</button>
+        <button id="clearRows" type="button" class="ghost">Tabloyu Temizle</button>
+      </div>
+
+      <div class="table-wrap">
+        <table id="trackerTable">
+          <thead>
+            <tr>
+              <th>Ad Soyad</th>
+              <th>Öğrenci No</th>
+              <th>Kurum</th>
+              <th>Başlangıç</th>
+              <th>Bitiş</th>
+              <th>Evrak Durumu</th>
+              <th>Komisyon</th>
+              <th>İdari Bildirim</th>
+              <th>Not</th>
+              <th>Sil</th>
+            </tr>
+          </thead>
+          <tbody id="trackerBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="container footer">
+    <p>Son güncelleme: 11 Şubat 2026</p>
+    <p>
+      Kaynaklar: Mesleki Uygulama Yönergesi (18.12.2024), Mesleki Uygulama Formu (İF-F015-R0), Mesleki Uygulama İş Akışı.
+    </p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
