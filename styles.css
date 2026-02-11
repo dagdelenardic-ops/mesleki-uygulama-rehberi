@@ -102,6 +102,31 @@ a {
   animation: rise 480ms ease-out;
 }
 
+.top-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.nav-chip {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  border: 1px solid #8a7754;
+  padding: 0.38rem 0.74rem;
+  background: #fbf4e6;
+  color: #22313a;
+}
+
+.nav-chip.active {
+  border-color: transparent;
+  color: #f8fffe;
+  background: linear-gradient(130deg, #0f6c73, #15505a);
+}
+
 .kicker {
   font-size: 0.94rem;
   font-weight: 700;
@@ -301,6 +326,17 @@ button:focus {
   accent-color: var(--accent);
 }
 
+.steps-list {
+  margin: 0;
+  padding-left: 1.25rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+.steps-list li {
+  padding-left: 0.1rem;
+}
+
 .table-wrap {
   overflow: auto;
   border: 1px solid #ccbea5;
@@ -388,6 +424,27 @@ button:hover {
   gap: 0.5rem;
 }
 
+.auth-card {
+  max-width: 560px;
+}
+
+.auth-row {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 0.5rem;
+}
+
+.auth-message {
+  margin: 0;
+  min-height: 1.2rem;
+  color: #8a1f00;
+  font-weight: 600;
+}
+
+#commissionContent[hidden] {
+  display: none;
+}
+
 .icon-btn {
   border-radius: 8px;
   padding: 0.36rem 0.55rem;
@@ -446,6 +503,10 @@ button:hover {
 
   .checklist label {
     align-items: center;
+  }
+
+  .auth-row {
+    grid-template-columns: 1fr;
   }
 
   th,

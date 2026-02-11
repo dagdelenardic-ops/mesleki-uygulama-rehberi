@@ -1,5 +1,7 @@
 const CHECKBOX_KEY = "stajRehberiCheckboxes";
 const TRACKER_KEY = "stajRehberiTrackerRows";
+const COMMISSION_AUTH_KEY = "stajRehberiCommissionAuth";
+const COMMISSION_PASSWORD = "Medipol1453";
 
 function formatDate(date) {
   const d = String(date.getDate()).padStart(2, "0");
@@ -96,6 +98,57 @@ function setupPlanner() {
 
   input.addEventListener("change", render);
   render();
+}
+
+function setupCommissionAuth() {
+  const authGate = document.getElementById("authGate");
+  const content = document.getElementById("commissionContent");
+  const input = document.getElementById("commissionPassword");
+  const loginButton = document.getElementById("commissionLogin");
+  const message = document.getElementById("authMessage");
+  const logoutButton = document.getElementById("commissionLogout");
+
+  if (!authGate || !content || !input || !loginButton || !message) return;
+
+  const unlock = () => {
+    authGate.hidden = true;
+    content.hidden = false;
+    content.classList.add("unlocked");
+  };
+
+  const lock = () => {
+    sessionStorage.removeItem(COMMISSION_AUTH_KEY);
+    content.hidden = true;
+    authGate.hidden = false;
+    input.value = "";
+    message.textContent = "";
+    content.classList.remove("unlocked");
+  };
+
+  if (sessionStorage.getItem(COMMISSION_AUTH_KEY) === "ok") {
+    unlock();
+  } else {
+    lock();
+  }
+
+  const tryLogin = () => {
+    const value = input.value.trim();
+    if (value === COMMISSION_PASSWORD) {
+      sessionStorage.setItem(COMMISSION_AUTH_KEY, "ok");
+      unlock();
+      message.textContent = "";
+      return;
+    }
+    message.textContent = "Şifre hatalı. Lütfen tekrar deneyin.";
+  };
+
+  loginButton.addEventListener("click", tryLogin);
+  input.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+      tryLogin();
+    }
+  });
+  logoutButton?.addEventListener("click", lock);
 }
 
 function evaluateDecision() {
@@ -310,6 +363,7 @@ function setupTrackerTable() {
 }
 
 function init() {
+  setupCommissionAuth();
   setupTabs();
   setupChecklistPersistence();
   setupPlanner();

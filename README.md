@@ -7,6 +7,12 @@ Amaç:
 - Bölüm sekreteri, asistanlar ve öğretim üyeleri için görev akışını tek ekranda toplamak
 - Resmi belge teslimi elden devam ederken dijital rehber ve takip desteği sağlamak
 
+## Sayfa Ayrımı
+
+- `index.html`: Öğrencilere açık, şifresiz rehber
+- `komisyon.html`: Komisyon kabul/değerlendirme ekranı (şifre korumalı)
+  - Şifre: `Medipol1453`
+
 ## İçerik
 
 - Rol bazlı kontrol listeleri (öğrenci, bölüm sekreteri, asistan, öğretim üyesi)
@@ -17,7 +23,8 @@ Amaç:
 
 ## Dosyalar
 
-- `index.html`: Arayüz
+- `index.html`: Öğrenci arayüzü
+- `komisyon.html`: Komisyon arayüzü
 - `styles.css`: Stil dosyası
 - `app.js`: Etkileşim ve kayıt mantığı
 - `docs/`: Paylaşılan PDF belgeler
