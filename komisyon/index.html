@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mesleki Uygulama Komisyon Ekranı</title>
+  <meta
+    name="description"
+    content="Mesleki uygulama başvurularının kabul, değerlendirme ve idari bildirim süreçleri için komisyon ekranı."
+  />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Source+Sans+3:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <div class="bg-orb orb-1" aria-hidden="true"></div>
+  <div class="bg-orb orb-2" aria-hidden="true"></div>
+  <div class="bg-grid" aria-hidden="true"></div>
+
+  <header class="hero container">
+    <nav class="top-nav" aria-label="Sayfa bağlantıları">
+      <a class="nav-chip" href="../ogrenci/">Öğrenci Sayfası</a>
+      <a class="nav-chip active" href="../komisyon/">Komisyon Girişi</a>
+    </nav>
+
+    <p class="kicker">Komisyon Erişimi</p>
+    <h1>Mesleki Uygulama Komisyon Ekranı</h1>
+    <p class="lead">Başvuru kabulü, kurum uygunluk değerlendirmesi, idari bildirim ve SGK takip işlemleri.</p>
+  </header>
+
+  <main class="container stack-xl">
+    <section id="authGate" class="card auth-card stack-md">
+      <h2>Şifreli Giriş</h2>
+      <p class="muted">Komisyon ekranını açmak için şifreyi girin.</p>
+      <div class="auth-row">
+        <input id="commissionPassword" type="password" placeholder="Şifre" autocomplete="current-password" />
+        <button id="commissionLogin" type="button">Giriş Yap</button>
+      </div>
+      <p id="authMessage" class="auth-message" aria-live="polite"></p>
+    </section>
+
+    <div id="commissionContent" hidden>
+      <section class="card stack-md">
+        <div class="section-title-row">
+          <h2>1) Belge Kabul ve Görev Akışı</h2>
+          <button id="commissionLogout" type="button" class="ghost">Çıkış</button>
+        </div>
+
+        <div class="tabs" role="tablist" aria-label="Rol sekmeleri">
+          <button class="tab active" data-target="role-secretary" type="button">Bölüm Sekreteri</button>
+          <button class="tab" data-target="role-assistant" type="button">Asistanlar</button>
+          <button class="tab" data-target="role-faculty" type="button">Öğretim Üyeleri</button>
+        </div>
+
+        <section id="role-secretary" class="tab-panel active">
+          <p class="panel-meta">Tamamlanma: <strong data-progress-for="secretary">0%</strong></p>
+          <ul class="checklist" data-role="secretary">
+            <li><label><input type="checkbox" data-key="secretary-1" /> Öğrencinin başvuru evraklarını teslim al</label></li>
+            <li><label><input type="checkbox" data-key="secretary-2" /> Zorunlu ekleri ön kontrolden geçir (EK-1, fotoğraf, kimlik vb.)</label></li>
+            <li><label><input type="checkbox" data-key="secretary-3" /> Eksik evrakı öğrenciye bildir ve asistan listesine işle</label></li>
+            <li><label><input type="checkbox" data-key="secretary-4" /> Eksiksiz dosyayı araştırma görevlisine teslim et</label></li>
+            <li><label><input type="checkbox" data-key="secretary-5" /> Teslim edilen dosyalar için günlük kayıt tut</label></li>
+          </ul>
+        </section>
+
+        <section id="role-assistant" class="tab-panel">
+          <p class="panel-meta">Tamamlanma: <strong data-progress-for="assistant">0%</strong></p>
+          <ul class="checklist" data-role="assistant">
+            <li><label><input type="checkbox" data-key="assistant-1" /> Öğrenci başvuru formlarını toplamak</label></li>
+            <li><label><input type="checkbox" data-key="assistant-2" /> EK belgeleri kontrol etmek</label></li>
+            <li><label><input type="checkbox" data-key="assistant-3" /> Eksik evrak varsa Sevde'ye bildirmek</label></li>
+            <li><label><input type="checkbox" data-key="assistant-4" /> Başvuru Excel listesini tutmak</label></li>
+            <li><label><input type="checkbox" data-key="assistant-5" /> Onaya hazır dosyaları öğretim üyesine iletmek</label></li>
+            <li><label><input type="checkbox" data-key="assistant-6" /> Onaylanan öğrencileri idari birime Birgül yazısıyla bildirmek</label></li>
+            <li><label><input type="checkbox" data-key="assistant-7" /> SGK süreci takibini Birgül üzerinden yürütmek</label></li>
+          </ul>
+        </section>
+
+        <section id="role-faculty" class="tab-panel">
+          <p class="panel-meta">Tamamlanma: <strong data-progress-for="faculty">0%</strong></p>
+          <ul class="checklist" data-role="faculty">
+            <li><label><input type="checkbox" data-key="faculty-1" /> Kurum aramalarını yapmak</label></li>
+            <li><label><input type="checkbox" data-key="faculty-2" /> Kurumun yönergeye uygunluğunu onaylamak</label></li>
+            <li><label><input type="checkbox" data-key="faculty-3" /> Online staj imkanına karar vermek</label></li>
+            <li><label><input type="checkbox" data-key="faculty-4" /> Öğrenci mülakatını yapmak</label></li>
+            <li><label><input type="checkbox" data-key="faculty-5" /> Onaylanan öğrencileri idari birime resmi yazıyla iletmek</label></li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="card stack-md">
+        <h2>2) Belge Kontrol Matrisi</h2>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Belge</th>
+                <th>Ne zaman</th>
+                <th>Kim hazırlar</th>
+                <th>Kim kontrol eder</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>EK-1 Mesleki Uygulama Formu (3 asıl nüsha)</td>
+                <td>Başvurudan önce</td>
+                <td>Öğrenci + Kurum Yetkilisi</td>
+                <td>Bölüm Sekreteri / Asistan</td>
+              </tr>
+              <tr>
+                <td>3 kimlik fotokopisi + 3 vesikalık</td>
+                <td>EK-1 ile birlikte</td>
+                <td>Öğrenci</td>
+                <td>Bölüm Sekreteri</td>
+              </tr>
+              <tr>
+                <td>İSG Belgesi / EK-8 teyidi</td>
+                <td>Staj başlangıcından önce</td>
+                <td>Öğrenci + İSG Birimi</td>
+                <td>Komisyon</td>
+              </tr>
+              <tr>
+                <td>EK-9 İşletme ve Öğrenci Bilgileri Tespit Formu</td>
+                <td>Başvuru aşaması</td>
+                <td>İşletme</td>
+                <td>Asistan / Komisyon</td>
+              </tr>
+              <tr>
+                <td>EK-2 İşyeri Değerlendirme + EK-3 Devam Çizelgesi (kapalı zarf)</td>
+                <td>20 iş günü sonrası</td>
+                <td>İşyeri Yetkilisi</td>
+                <td>Bölüm Komisyonu</td>
+              </tr>
+              <tr>
+                <td>Mesleki Uygulama Dosyası (EK-7 serisi)</td>
+                <td>Staj bitiminde</td>
+                <td>Öğrenci</td>
+                <td>Bölüm Komisyonu</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card stack-md">
+        <h2>3) Kurum Uygunluk Ön Kararı</h2>
+        <p class="muted">Tüm zorunlu kriterler sağlandığında dosya onaya hazır görünür.</p>
+
+        <div class="quick-form">
+          <label>Öğrenci Ad Soyad <input type="text" id="studentName" placeholder="Örn. Ayşe Yılmaz" /></label>
+          <label>Öğrenci No <input type="text" id="studentNo" placeholder="Örn. 202112345" /></label>
+          <label>Kurum Adı <input type="text" id="companyName" placeholder="Örn. X Haber Ajansı" /></label>
+          <label>Başlangıç Tarihi <input type="date" id="startDate" /></label>
+          <label>Bitiş Tarihi <input type="date" id="endDate" /></label>
+        </div>
+
+        <ul class="checklist decision-list" id="decisionChecklist">
+          <li><label><input type="checkbox" data-decision="must" /> İSG belgesi mevcut</label></li>
+          <li><label><input type="checkbox" data-decision="must" /> EK belgeler ve kimlik/fotoğraf seti tam</label></li>
+          <li><label><input type="checkbox" data-decision="must" /> Kurum mevzuata uygun (İstanbul veya USP istisnası)</label></li>
+          <li><label><input type="checkbox" data-decision="must" /> Öğrenci kendi/yakınına ait ya da çalıştığı kurumda değil</label></li>
+          <li><label><input type="checkbox" data-decision="must" /> 20 iş günü tek kurumda planlandı</label></li>
+          <li><label><input type="checkbox" data-decision="must" /> Başlangıç tarihinden en az 20 gün önce başvuru yapılmış</label></li>
+          <li>
+            <label>
+              <input type="checkbox" id="isOnline" />
+              Online staj planı var
+            </label>
+          </li>
+          <li>
+            <label>
+              <input type="checkbox" id="onlineApproved" />
+              Online staj için bölüm komisyon onayı alındı
+            </label>
+          </li>
+        </ul>
+
+        <div class="decision-box" id="decisionBox" aria-live="polite">
+          Ön karar: <strong>Kontrol bekleniyor</strong>
+        </div>
+
+        <div class="button-row">
+          <button id="copyNotice" type="button">Birgül Yazısı Taslağını Kopyala</button>
+          <button id="resetChecks" type="button" class="ghost">Kontrolleri Sıfırla</button>
+        </div>
+      </section>
+
+      <section class="card stack-md">
+        <div class="section-title-row">
+          <h2>4) Başvuru Takip Listesi (Excel Yardımcısı)</h2>
+          <p class="muted">Bu tablo tarayıcıda tutulur, CSV olarak indirilebilir.</p>
+        </div>
+
+        <div class="button-row">
+          <button id="addRow" type="button">Yeni Satır</button>
+          <button id="exportCsv" type="button">CSV İndir</button>
+          <button id="clearRows" type="button" class="ghost">Tabloyu Temizle</button>
+        </div>
+
+        <div class="table-wrap">
+          <table id="trackerTable">
+            <thead>
+              <tr>
+                <th>Ad Soyad</th>
+                <th>Öğrenci No</th>
+                <th>Kurum</th>
+                <th>Başlangıç</th>
+                <th>Bitiş</th>
+                <th>Evrak Durumu</th>
+                <th>Komisyon</th>
+                <th>İdari Bildirim</th>
+                <th>Not</th>
+                <th>Sil</th>
+              </tr>
+            </thead>
+            <tbody id="trackerBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="container footer">
+    <p>Son güncelleme: 11 Şubat 2026</p>
+    <p>
+      Kaynaklar: Mesleki Uygulama Yönergesi (18.12.2024), Mesleki Uygulama Formu (İF-F015-R0), Mesleki Uygulama İş Akışı.
+    </p>
+  </footer>
+
+  <script src="../app.js"></script>
+</body>
+</html>

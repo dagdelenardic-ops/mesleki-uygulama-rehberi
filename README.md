@@ -9,8 +9,8 @@ Amaç:
 
 ## Sayfa Ayrımı
 
-- `index.html`: Öğrencilere açık, şifresiz rehber
-- `komisyon.html`: Komisyon kabul/değerlendirme ekranı (şifre korumalı)
+- `ogrenci/index.html`: Öğrencilere açık, şifresiz rehber
+- `komisyon/index.html`: Komisyon kabul/değerlendirme ekranı (şifre korumalı)
   - Şifre: `Medipol1453`
 
 ## İçerik
@@ -23,8 +23,9 @@ Amaç:
 
 ## Dosyalar
 
-- `index.html`: Öğrenci arayüzü
-- `komisyon.html`: Komisyon arayüzü
+- `index.html`: Giriş/bağlantı sayfası
+- `ogrenci/index.html`: Öğrenci arayüzü
+- `komisyon/index.html`: Komisyon arayüzü
 - `styles.css`: Stil dosyası
 - `app.js`: Etkileşim ve kayıt mantığı
 - `docs/`: Paylaşılan PDF belgeler

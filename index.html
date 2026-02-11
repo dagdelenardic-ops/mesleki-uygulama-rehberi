@@ -3,11 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mesleki Uygulama Öğrenci Sayfası</title>
-  <meta
-    name="description"
-    content="Gazetecilik bölümü öğrencileri için mesleki uygulama sürecinde takip edilmesi gereken adımlar ve belgeler."
-  />
+  <title>Mesleki Uygulama Portalı</title>
+  <meta name="description" content="Öğrenci ve komisyon için ayrı mesleki uygulama erişim bağlantıları." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -22,123 +19,29 @@
   <div class="bg-grid" aria-hidden="true"></div>
 
   <header class="hero container">
-    <nav class="top-nav" aria-label="Sayfa bağlantıları">
-      <a class="nav-chip active" href="index.html">Öğrenci Sayfası</a>
-      <a class="nav-chip" href="komisyon.html">Komisyon Girişi</a>
-    </nav>
-
-    <p class="kicker">Şifresiz Erişim</p>
-    <h1>Mesleki Uygulama Öğrenci Rehberi</h1>
-    <p class="lead">
-      Bu sayfa öğrenciler için hazırlanmıştır. Tüm evrakları buradan indirip adımları sırayla takip edebilirsiniz.
-      Resmi teslim işlemi fiziksel evrakla bölüm sekreterliğine yapılır.
-    </p>
-
-    <div class="rule-chips">
-      <span>20 iş günü zorunlu</span>
-      <span>Tek kurumda tamamlanır</span>
-      <span>İSG eğitimi zorunlu</span>
-      <span>Başlangıçtan en az 20 gün önce başvuru</span>
-    </div>
+    <p class="kicker">Mesleki Uygulama Portalı</p>
+    <h1>Erişim Sayfası</h1>
+    <p class="lead">Öğrenci ve komisyon sayfaları ayrı linkler üzerinden yayınlanmaktadır.</p>
   </header>
 
   <main class="container stack-xl">
-    <section class="card notice">
-      <h2>Kritik Not</h2>
-      <p>
-        Komisyon onayı olmadan mesleki uygulama başlatılamaz. Belgelerinizi eksiksiz hazırlayıp zamanında teslim
-        etmeniz gerekir.
-      </p>
-    </section>
-
     <section class="card stack-md">
-      <div class="section-title-row">
-        <h2>1) İndirilecek Belgeler</h2>
-        <p class="muted">Tüm belgeler tek yerde.</p>
-      </div>
+      <h2>Bağlantılar</h2>
       <div class="doc-grid">
-        <a class="doc-card" href="docs/if-mesleki-uygulama-yonergesi.pdf" target="_blank" rel="noopener noreferrer">
-          <strong>Mesleki Uygulama Yönergesi</strong>
-          <span>Resmi şartları buradan okuyun</span>
+        <a class="doc-card" href="ogrenci/">
+          <strong>Öğrenci Sayfası (Şifresiz)</strong>
+          <span>Belgeler, adımlar, öğrenci kontrol listesi</span>
         </a>
-        <a class="doc-card" href="docs/mesleki-uygulama-formu_1.pdf" target="_blank" rel="noopener noreferrer">
-          <strong>Mesleki Uygulama Form Seti (EK 1-9)</strong>
-          <span>Gerekli formlar bu dosyada</span>
-        </a>
-        <a class="doc-card" href="docs/mesleki-uygulama-is-akisi.pdf" target="_blank" rel="noopener noreferrer">
-          <strong>Mesleki Uygulama İş Akışı</strong>
-          <span>Özet süreç akışı</span>
+        <a class="doc-card" href="komisyon/">
+          <strong>Komisyon Sayfası (Şifreli)</strong>
+          <span>Belge kabul, değerlendirme ve takip ekranı</span>
         </a>
       </div>
-    </section>
-
-    <section class="card stack-md">
-      <h2>2) Adım Adım Ne Yapmalıyım?</h2>
-      <ol class="steps-list">
-        <li>Mesleki Uygulama dersini seçin.</li>
-        <li>İSG eğitimini tamamlayın (veya geçerli belgenizi onaylatın).</li>
-        <li>EK-1 formunu 3 asıl nüsha olarak doldurup kuruma onaylatın.</li>
-        <li>3 kimlik fotokopisi + 3 vesikalık fotoğraf hazırlayın.</li>
-        <li>Staj başlangıcından en az 20 gün önce evrakları bölüm sekreterliğine teslim edin.</li>
-        <li>Onay sonrası tek kurumda 20 iş gününü tamamlayın.</li>
-        <li>Staj sonunda EK-2, EK-3 ve dosyanızı kapalı zarfta teslim edin.</li>
-        <li>Komisyon mülakatına katılın.</li>
-      </ol>
-    </section>
-
-    <section class="card stack-md">
-      <h2>3) Kendi Kontrol Listem</h2>
-      <p class="panel-meta">Tamamlanma: <strong data-progress-for="student">0%</strong></p>
-      <ul class="checklist" data-role="student">
-        <li><label><input type="checkbox" data-key="student-1" /> Dersi seçtim</label></li>
-        <li><label><input type="checkbox" data-key="student-2" /> İSG belgem tamam</label></li>
-        <li><label><input type="checkbox" data-key="student-3" /> EK-1 kuruma onaylatıldı</label></li>
-        <li><label><input type="checkbox" data-key="student-4" /> 3 kimlik fotokopisi + 3 vesikalık hazır</label></li>
-        <li><label><input type="checkbox" data-key="student-5" /> Evrakları en az 20 gün önce teslim ettim</label></li>
-        <li><label><input type="checkbox" data-key="student-6" /> 20 iş günü stajı tamamladım</label></li>
-        <li><label><input type="checkbox" data-key="student-7" /> EK-2, EK-3 ve dosyayı teslim ettim</label></li>
-        <li><label><input type="checkbox" data-key="student-8" /> Komisyon mülakatına girdim</label></li>
-      </ul>
-    </section>
-
-    <section class="card stack-md">
-      <h2>4) Tarih Planlayıcı</h2>
-      <div class="planner-grid">
-        <label for="submissionDate">Evrak teslim tarihi</label>
-        <input id="submissionDate" type="date" />
-      </div>
-      <div class="result-grid">
-        <article>
-          <h3>İş akışı belgesine göre</h3>
-          <p>Evrak tesliminden 15 gün sonra başlanabilir:</p>
-          <strong id="datePlus15">-</strong>
-        </article>
-        <article>
-          <h3>Yönergeye göre</h3>
-          <p>Başlangıç tarihinden en az 20 gün önce form teslim edilmelidir.</p>
-          <strong id="datePlus20">-</strong>
-        </article>
-      </div>
-    </section>
-
-    <section class="card stack-md">
-      <h2>5) Sık Hata Kontrolü</h2>
-      <ul class="checklist">
-        <li>Başlangıçtan 20 gün önce teslim şartını kaçırmayın.</li>
-        <li>Fotokopi değil, 3 asıl nüsha form hazırlayın.</li>
-        <li>İSG belgesi olmadan staja başlamayın.</li>
-        <li>Stajı tek kurumda ve 20 iş günü tamamlayın.</li>
-      </ul>
     </section>
   </main>
 
   <footer class="container footer">
     <p>Son güncelleme: 11 Şubat 2026</p>
-    <p>
-      Komisyon ekranı için: <a href="komisyon.html">komisyon.html</a>
-    </p>
   </footer>
-
-  <script src="app.js"></script>
 </body>
 </html>
