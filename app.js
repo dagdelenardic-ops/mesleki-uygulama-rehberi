@@ -225,7 +225,7 @@ function setupCommissionAuth() {
 
   const tryLogin = () => {
     const value = input.value.trim();
-    if (value === COMMISSION_PASSWORD) {
+    if (value.toLowerCase() === COMMISSION_PASSWORD.toLowerCase()) {
       sessionStorage.setItem(COMMISSION_AUTH_KEY, "ok");
       unlock();
       message.textContent = "";
