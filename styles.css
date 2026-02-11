@@ -274,6 +274,18 @@ button:focus {
   gap: 0.45rem;
 }
 
+.identity-grid {
+  display: grid;
+  gap: 0.45rem;
+  max-width: 560px;
+}
+
+.meta-note {
+  margin: 0;
+  color: var(--ink-muted);
+  font-weight: 600;
+}
+
 .tab {
   border: 1px solid #99865f;
   background: #fdf8ee;

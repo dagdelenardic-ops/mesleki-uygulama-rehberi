@@ -1,6 +1,7 @@
 const CHECKBOX_KEY = "stajRehberiCheckboxes";
 const TRACKER_KEY = "stajRehberiTrackerRows";
 const DECISION_FORM_KEY = "stajRehberiDecisionForm";
+const OPERATOR_NAME_KEY = "stajRehberiOperatorName";
 const COMMISSION_AUTH_KEY = "stajRehberiCommissionAuth";
 const COMMISSION_PASSWORD = "Medipol1453";
 const COMMISSION_POLL_MS = 8000;
@@ -43,6 +44,21 @@ function saveJson(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
+function formatDateTime(isoValue) {
+  if (!isoValue) return "-";
+  const date = new Date(isoValue);
+  if (Number.isNaN(date.getTime())) return "-";
+
+  return new Intl.DateTimeFormat("tr-TR", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit"
+  }).format(date);
+}
+
 function isCommissionPage() {
   return Boolean(document.getElementById("commissionContent"));
 }
@@ -50,6 +66,41 @@ function isCommissionPage() {
 function emitCommissionLocalChange() {
   if (!isCommissionPage()) return;
   window.dispatchEvent(new Event("commission:local-change"));
+}
+
+function getOperatorName() {
+  const input = document.getElementById("operatorName");
+  if (input instanceof HTMLInputElement) {
+    return input.value.trim();
+  }
+  return String(localStorage.getItem(OPERATOR_NAME_KEY) || "").trim();
+}
+
+function updateCommissionMetaText(snapshot) {
+  const meta = document.getElementById("syncMeta");
+  if (!meta) return;
+
+  const updatedBy = snapshot?.updatedBy?.trim() || "Belirtilmedi";
+  const updatedAt = formatDateTime(snapshot?.updatedAt || "");
+  meta.textContent = `Son güncelleme: ${updatedAt} - ${updatedBy}`;
+}
+
+function setupOperatorIdentity() {
+  if (!isCommissionPage()) return;
+
+  const input = document.getElementById("operatorName");
+  if (!(input instanceof HTMLInputElement)) return;
+
+  const savedName = String(localStorage.getItem(OPERATOR_NAME_KEY) || "").trim();
+  if (savedName) input.value = savedName;
+
+  const persist = () => {
+    localStorage.setItem(OPERATOR_NAME_KEY, input.value.trim());
+    emitCommissionLocalChange();
+  };
+
+  input.addEventListener("input", persist);
+  input.addEventListener("change", persist);
 }
 
 function setupTabs() {
@@ -469,7 +520,8 @@ function normalizeCommissionSnapshot(value) {
     checkboxes,
     trackerRows,
     decisionForm,
-    updatedAt: typeof value.updatedAt === "string" ? value.updatedAt : ""
+    updatedAt: typeof value.updatedAt === "string" ? value.updatedAt : "",
+    updatedBy: typeof value.updatedBy === "string" ? value.updatedBy : ""
   };
 }
 
@@ -478,7 +530,8 @@ function getCommissionSnapshot() {
     checkboxes: loadJson(CHECKBOX_KEY, {}),
     trackerRows: loadJson(TRACKER_KEY, []),
     decisionForm: loadJson(DECISION_FORM_KEY, {}),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
+    updatedBy: getOperatorName()
   };
 }
 
@@ -486,7 +539,8 @@ function fingerprintCommissionSnapshot(snapshot) {
   return JSON.stringify({
     checkboxes: snapshot.checkboxes || {},
     trackerRows: Array.isArray(snapshot.trackerRows) ? snapshot.trackerRows : [],
-    decisionForm: snapshot.decisionForm || {}
+    decisionForm: snapshot.decisionForm || {},
+    updatedBy: snapshot.updatedBy || ""
   });
 }
 
@@ -498,6 +552,7 @@ function applyCommissionSnapshot(snapshot) {
   applyChecklistStateFromStorage();
   restoreDecisionForm();
   renderTrackerRows(snapshot.trackerRows);
+  updateCommissionMetaText(snapshot);
   ["secretary", "assistant", "faculty"].forEach(updateRoleProgress);
   evaluateDecision();
 }
@@ -524,6 +579,7 @@ async function pushCommissionRemoteSnapshot() {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     commissionRemoteFingerprint = fingerprintCommissionSnapshot(snapshot);
     commissionPendingLocal = false;
+    updateCommissionMetaText(snapshot);
   } catch (error) {
     console.error("Komisyon verisi buluta yazılamadı:", error);
   } finally {
@@ -618,6 +674,7 @@ function setupCommissionSharedSync() {
 
 function init() {
   setupCommissionAuth();
+  setupOperatorIdentity();
   setupTabs();
   setupChecklistPersistence();
   setupPlanner();

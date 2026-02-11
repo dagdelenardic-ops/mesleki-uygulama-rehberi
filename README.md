@@ -70,6 +70,7 @@ window.STAJ_COMMISSION_REMOTE_URL = "https://<firebase-db>.firebasedatabase.app/
 4. GitHub'a push edin.
 
 Not: Komisyon ekranı yine sayfa şifresi (`Medipol1453`) ile açılır. URL boş bırakılırsa veriler yalnızca cihazdaki tarayıcıda kalır.
+Komisyon ekranında yapılan değişiklikler için üstteki `İşlemi Yapan` alanına ad-soyad girilir; son güncelleme bilgisinde isim ve zaman görünür.
 
 ## GitHub Pages ile Yayınlama
 
